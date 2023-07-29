@@ -1,3 +1,3 @@
 # mk8_randomizer
 
-A new Flutter project.
+Generate a list of tracks for Mario Kart 8
