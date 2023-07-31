@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final raceCountProvider = NotifierProvider<RaceCount, int>(RaceCount.new);
+final raceCountProvider = NotifierProvider<RaceCountNotifier, int>(RaceCountNotifier.new);
 
-class RaceCount extends Notifier<int> {
+class RaceCountNotifier extends Notifier<int> {
   final _raceCounts = [
     4,
     6,
