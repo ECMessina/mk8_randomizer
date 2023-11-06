@@ -16,8 +16,6 @@ class RaceCountNotifier extends Notifier<int> {
 
   int _raceCountIndex = 0;
 
-  int get raceCount => state;
-
   @override
   int build() {
     return _raceCounts[_raceCountIndex];

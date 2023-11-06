@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mk8_randomizer/providers.dart';
+import 'package:mk8_randomizer/providers/race_count_provider.dart';
 
-class RaceCountRow extends ConsumerStatefulWidget {
+class RaceCountRow extends ConsumerWidget {
   const RaceCountRow({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<RaceCountRow> createState() => _RaceCountRowState();
-}
-
-class _RaceCountRowState extends ConsumerState<RaceCountRow> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final raceCount = ref.watch(raceCountProvider);
 
     return Row(
