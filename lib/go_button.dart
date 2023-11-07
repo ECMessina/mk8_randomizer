@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mk8_randomizer/providers/race_count_provider.dart';
 import 'package:mk8_randomizer/providers/race_details_provider.dart';
+import 'package:mk8_randomizer/races_selected.dart';
 
 class GoButton extends ConsumerWidget {
   const GoButton({Key? key}) : super(key: key);
@@ -24,6 +25,8 @@ class GoButton extends ConsumerWidget {
         backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 3, 9, 73)),
       ),
       onPressed: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const RacesSelected()));
+
         // debugPrint("${ref.read(raceCountProvider)}");
         // debugPrint("${ref.read(raceCountProvider.notifier).raceCount}");
 
