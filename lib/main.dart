@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mk8_randomizer/go_button.dart';
-import 'package:mk8_randomizer/race_count_row.dart';
-import 'package:mk8_randomizer/track_grid_view.dart';
+import 'package:mk8_randomizer/widgets/go_button.dart';
+import 'package:mk8_randomizer/widgets/race_count_row.dart';
+import 'package:mk8_randomizer/widgets/track_grid_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

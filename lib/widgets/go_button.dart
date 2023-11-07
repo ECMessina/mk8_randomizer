@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mk8_randomizer/providers/race_count_provider.dart';
 import 'package:mk8_randomizer/providers/race_details_provider.dart';
-import 'package:mk8_randomizer/races_selected.dart';
+import 'package:mk8_randomizer/screens/races_selected.dart';
 
 class GoButton extends ConsumerWidget {
   const GoButton({Key? key}) : super(key: key);
