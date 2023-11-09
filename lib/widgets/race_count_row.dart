@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mk8_randomizer/providers/race_count_provider.dart';
+import 'package:mk8_randomizer/widgets/race_count_button.dart';
 
 class RaceCountRow extends ConsumerWidget {
   const RaceCountRow({Key? key}) : super(key: key);
@@ -33,29 +34,6 @@ class RaceCountRow extends ConsumerWidget {
           onPressed: () => ref.read(raceCountProvider.notifier).increment(),
         ),
       ],
-    );
-  }
-}
-
-class RaceCountButton extends StatelessWidget {
-  const RaceCountButton({
-    Key? key,
-    required this.onPressed,
-  }) : super(key: key);
-
-  final Function() onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      color: Colors.white,
-      highlightColor: Colors.transparent,
-      splashColor: Colors.transparent,
-      icon: const Icon(
-        Icons.double_arrow,
-        size: 30,
-      ),
-      onPressed: onPressed,
     );
   }
 }

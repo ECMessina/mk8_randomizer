@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mk8_randomizer/widgets/go_button.dart';
-import 'package:mk8_randomizer/widgets/race_count_row.dart';
-import 'package:mk8_randomizer/widgets/track_grid_view.dart';
+import 'package:mk8_randomizer/screens/track_selection.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,30 +22,8 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: SafeArea(
-          child: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-                colors: [
-                  Color.fromARGB(255, 5, 8, 170),
-                  Color.fromARGB(255, 5, 119, 139),
-                ],
-              ),
-            ),
-            child: const Column(
-              children: [
-                RaceCountRow(),
-                TrackGridView(),
-                GoButton(),
-              ],
-            ),
-          ),
-        ),
-      ),
+    return const MaterialApp(
+      home: TrackSelection(),
     );
   }
 }
