@@ -11,7 +11,7 @@ class RaceCountNotifier extends Notifier<int> {
     16,
     24,
     32,
-    48
+    48,
   ];
 
   int _raceCountIndex = 0;

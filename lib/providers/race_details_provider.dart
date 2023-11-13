@@ -24,7 +24,7 @@ class RaceDetailsNotifier extends Notifier<RaceDetails> {
 
 class RaceDetails {
   RaceDetails() {
-    for (int x = 0; x < 22; x++) {
+    for (int x = 0; x < 24; x++) {
       cups.add(Cup());
     }
   }
