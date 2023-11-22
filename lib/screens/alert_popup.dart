@@ -1,8 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:mk8_randomizer/screens/track_selection.dart';
 
 class AlertPopup extends StatelessWidget {
-  const AlertPopup({super.key});
+  const AlertPopup({
+    super.key,
+    required this.contentText,
+    required this.buttonText1,
+    this.buttonText2,
+    required this.buttonOnPressed1,
+    this.buttonOnPressed2,
+  });
+
+  final String contentText;
+  final String buttonText1;
+  final String? buttonText2;
+  final Function() buttonOnPressed1;
+  final Function()? buttonOnPressed2;
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +28,8 @@ class AlertPopup extends StatelessWidget {
         'Hold up!',
         textAlign: TextAlign.center,
       ),
-      content: const Text(
-        'Waving a white flag already? This will start you over!',
+      content: Text(
+        contentText,
         textAlign: TextAlign.center,
       ),
       actions: [
@@ -25,24 +37,21 @@ class AlertPopup extends StatelessWidget {
           children: [
             Expanded(
               child: TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text(
-                  'Keep Racing',
+                onPressed: buttonOnPressed1,
+                child: Text(
+                  buttonText1,
                 ),
               ),
             ),
-            Expanded(
-              child: TextButton(
-                onPressed: () {
-                  Navigator.popUntil(context, (route) => route.isFirst);
-                },
-                child: const Text(
-                  'Reselect Races',
+            if (buttonText2 != null && buttonOnPressed2 != null)
+              Expanded(
+                child: TextButton(
+                  onPressed: buttonOnPressed2,
+                  child: Text(
+                    buttonText2!,
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ],

@@ -5,7 +5,9 @@ import 'package:mk8_randomizer/widgets/action_button.dart';
 import 'package:mk8_randomizer/widgets/race_count_button.dart';
 
 class RacesSelected extends StatelessWidget {
-  const RacesSelected({super.key});
+  const RacesSelected({super.key, required this.finalRaceList});
+
+  final List<String> finalRaceList;
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +15,17 @@ class RacesSelected extends StatelessWidget {
       onWillPop: () async {
         showDialog(
           context: context,
-          builder: (BuildContext context) => const AlertPopup(),
+          builder: (BuildContext context) => AlertPopup(
+            contentText: 'Waving a white flag already? This will start you over!',
+            buttonOnPressed1: () {
+              Navigator.pop(context);
+            },
+            buttonText1: 'Keep Racing',
+            buttonOnPressed2: () {
+              Navigator.popUntil(context, (route) => route.isFirst);
+            },
+            buttonText2: 'Reselect Races',
+          ),
           barrierDismissible: false,
         );
         return false;
@@ -65,7 +77,17 @@ class RacesSelected extends StatelessWidget {
                   onPressed: () {
                     showDialog(
                       context: context,
-                      builder: (BuildContext context) => const AlertPopup(),
+                      builder: (BuildContext context) => AlertPopup(
+                        contentText: 'Waving a white flag already? This will start you over!',
+                        buttonOnPressed1: () {
+                          Navigator.pop(context);
+                        },
+                        buttonText1: 'Keep Racing',
+                        buttonOnPressed2: () {
+                          Navigator.popUntil(context, (route) => route.isFirst);
+                        },
+                        buttonText2: 'Reselect Races',
+                      ),
                       barrierDismissible: false,
                     );
                   },
