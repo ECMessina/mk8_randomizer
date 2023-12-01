@@ -25,7 +25,7 @@ class AlertPopup extends StatelessWidget {
         ),
       ),
       title: const Text(
-        'Hold up!',
+        'Whoa!',
         textAlign: TextAlign.center,
       ),
       content: Text(

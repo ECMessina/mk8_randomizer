@@ -48,7 +48,7 @@ class TrackSelectionImage extends ConsumerWidget {
   final String imageNumber;
   late final int cupIndex;
   late final int? trackIndex;
-  late bool isSelected;
+  late final bool isSelected;
 
   final normalColor = const ColorFilter.mode(Colors.transparent, BlendMode.saturation);
   final greyscale = const ColorFilter.matrix(
