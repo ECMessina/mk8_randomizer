@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="mk8_randomizer"
+        android:label="MK8 Randomizer"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
