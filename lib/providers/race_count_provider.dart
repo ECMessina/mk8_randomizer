@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mk8_randomizer/constants.dart';
+import 'package:mk8_randomizer/providers/shared_preferences_provider.dart';
 
 final raceCountProvider = NotifierProvider<RaceCountNotifier, int>(RaceCountNotifier.new);
 
@@ -18,7 +20,10 @@ class RaceCountNotifier extends Notifier<int> {
 
   @override
   int build() {
-    return _raceCounts[_raceCountIndex];
+    var sharedPreferences = ref.read(sharedPreferencesProvider);
+    var savedRaceCount = sharedPreferences.getInt(kRaceCountPreference) ?? _raceCounts[_raceCountIndex];
+
+    return savedRaceCount;
   }
 
   void decrement() {
@@ -29,6 +34,8 @@ class RaceCountNotifier extends Notifier<int> {
     }
 
     state = _raceCounts[_raceCountIndex];
+
+    _saveToSharedPreferences();
   }
 
   void increment() {
@@ -39,5 +46,12 @@ class RaceCountNotifier extends Notifier<int> {
     }
 
     state = _raceCounts[_raceCountIndex];
+
+    _saveToSharedPreferences();
+  }
+
+  void _saveToSharedPreferences() async {
+    var sharedPreferences = ref.read(sharedPreferencesProvider);
+    await sharedPreferences.setInt(kRaceCountPreference, _raceCounts[_raceCountIndex]);
   }
 }

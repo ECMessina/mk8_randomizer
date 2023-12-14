@@ -10,3 +10,7 @@ const kBackgroundDecoration = BoxDecoration(
     ],
   ),
 );
+
+const kRaceCountPreference = 'RaceCount Preference';
+
+const kRaceDetailsPreference = 'RaceDetails Preference';

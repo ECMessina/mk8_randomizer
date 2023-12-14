@@ -1,11 +1,22 @@
+import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mk8_randomizer/constants.dart';
+import 'package:mk8_randomizer/providers/shared_preferences_provider.dart';
 
 final raceDetailsProvider = NotifierProvider<RaceDetailsNotifier, RaceDetails>(RaceDetailsNotifier.new);
 
 class RaceDetailsNotifier extends Notifier<RaceDetails> {
   @override
   RaceDetails build() {
-    return RaceDetails();
+    var sharedPreferences = ref.read(sharedPreferencesProvider);
+    var savedRaceDetailsJson = sharedPreferences.getString(kRaceDetailsPreference);
+
+    if (savedRaceDetailsJson == null) {
+      return RaceDetails();
+    }
+
+    var savedRaceDetails = RaceDetails.fromJson(jsonDecode(savedRaceDetailsJson));
+    return savedRaceDetails;
   }
 
   void toggleSelection(int cupIndex, int? trackIndex) {
@@ -19,6 +30,14 @@ class RaceDetailsNotifier extends Notifier<RaceDetails> {
     state = RaceDetails.copy(
       cups: state.cups,
     );
+
+    _saveToSharedPreferences();
+  }
+
+  void _saveToSharedPreferences() async {
+    var sharedPreferences = ref.read(sharedPreferencesProvider);
+    var savedRaceDetails = jsonEncode(state);
+    await sharedPreferences.setString(kRaceDetailsPreference, savedRaceDetails);
   }
 }
 
@@ -34,6 +53,14 @@ class RaceDetails {
   });
 
   List<Cup> cups = [];
+
+  Map<String, dynamic> toJson() => {
+        'cups': cups.map((cup) => cup.toJson()).toList()
+      };
+
+  RaceDetails.fromJson(Map<String, dynamic> json) {
+    cups = json['cups'].map<Cup>((cup) => Cup.fromJson(cup)).toList();
+  }
 }
 
 class Cup {
@@ -76,12 +103,32 @@ class Cup {
       selected = true;
     }
   }
+
+  Map<String, dynamic> toJson() => {
+        'selected': selected,
+        'tracks': tracks.map((track) => track.toJson()).toList()
+      };
+
+  Cup.fromJson(Map<String, dynamic> json) {
+    selected = json['selected'];
+    tracks = json['tracks'].map<Track>((track) => Track.fromJson(track)).toList();
+  }
 }
 
 class Track {
   bool selected = true;
 
+  Track();
+
   void toggleSelection() {
     selected = !selected;
+  }
+
+  Map<String, dynamic> toJson() => {
+        'selected': selected
+      };
+
+  Track.fromJson(Map<String, dynamic> json) {
+    selected = json['selected'];
   }
 }
