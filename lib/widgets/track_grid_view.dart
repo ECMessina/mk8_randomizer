@@ -1,13 +1,37 @@
 import 'package:dynamic_height_grid_view/dynamic_height_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mk8_randomizer/constants.dart';
 import 'package:mk8_randomizer/providers/race_details_provider.dart';
 
-class TrackGridView extends ConsumerWidget {
+class TrackGridView extends ConsumerStatefulWidget {
   const TrackGridView({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<TrackGridView> createState() => _TrackGridViewState();
+}
+
+class _TrackGridViewState extends ConsumerState<TrackGridView> with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: kCupAnimationDuration),
+      vsync: this,
+    )..repeat(reverse: true);
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final raceDetails = ref.watch(raceDetailsProvider);
 
     return Expanded(
@@ -19,7 +43,7 @@ class TrackGridView extends ConsumerWidget {
             children: [
               TrackSelectionImage(
                 imageNumber: "${index + 1}",
-                widthFactor: 0.55,
+                animationController: _animationController,
               ),
               for (int x = 0; x < 4; x++)
                 TrackSelectionImage(
@@ -36,16 +60,16 @@ class TrackGridView extends ConsumerWidget {
 class TrackSelectionImage extends ConsumerWidget {
   TrackSelectionImage({
     super.key,
-    this.widthFactor,
     required this.imageNumber,
+    this.animationController,
   }) {
     var splitImageNumber = imageNumber.split("-");
     cupIndex = int.parse(splitImageNumber[0]) - 1;
     trackIndex = splitImageNumber.length == 2 ? int.parse(splitImageNumber[1]) - 1 : null;
   }
 
-  final double? widthFactor;
   final String imageNumber;
+  final AnimationController? animationController;
   late final int cupIndex;
   late final int? trackIndex;
   late final bool isSelected;
@@ -93,12 +117,25 @@ class TrackSelectionImage extends ConsumerWidget {
           ref.read(raceDetailsProvider.notifier).toggleSelection(cupIndex, trackIndex);
         },
         child: FractionallySizedBox(
-          widthFactor: widthFactor,
+          widthFactor: (trackIndex == null) ? kCupWidthFactor : null,
           child: ColorFiltered(
             colorFilter: isSelected ? normalColor : greyscale,
-            child: Image.asset(
-              "images/$imageNumber.png",
-            ),
+            child: (animationController == null)
+                ? Image.asset(
+                    "images/$imageNumber.png",
+                  )
+                : Transform.rotate(
+                    angle: kCupRotationAngle,
+                    child: AnimatedBuilder(
+                      animation: animationController!,
+                      builder: (context, widget) => Transform.rotate(
+                        angle: animationController!.value * kCupRotationAngle * -2,
+                        child: Image.asset(
+                          "images/$imageNumber.png",
+                        ),
+                      ),
+                    ),
+                  ),
           ),
         ),
       ),

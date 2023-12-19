@@ -13,10 +13,28 @@ class RacesSelected extends StatefulWidget {
   State<RacesSelected> createState() => _RacesSelectedState();
 }
 
-class _RacesSelectedState extends State<RacesSelected> {
+class _RacesSelectedState extends State<RacesSelected> with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+
   var finalRaceIndex = 0;
 
   final trackController = PageController();
+
+  @override
+  void initState() {
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: kCupAnimationDuration),
+      vsync: this,
+    )..repeat(reverse: true);
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   void showRestartPopup() {
     if (finalRaceIndex != widget.finalRaceList.length - 1) {
@@ -125,10 +143,19 @@ class _RacesSelectedState extends State<RacesSelected> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             FractionallySizedBox(
-                              widthFactor: 0.55,
-                              child: Image.asset(
-                                "images/$activeCup.png",
-                                fit: BoxFit.fill,
+                              widthFactor: kCupWidthFactor,
+                              child: Transform.rotate(
+                                angle: kCupRotationAngle,
+                                child: AnimatedBuilder(
+                                  animation: _animationController,
+                                  builder: (context, widget) => Transform.rotate(
+                                    angle: _animationController.value * kCupRotationAngle * -2,
+                                    child: Image.asset(
+                                      "images/$activeCup.png",
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                             const SizedBox(height: 15),

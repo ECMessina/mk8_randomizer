@@ -12,5 +12,8 @@ const kBackgroundDecoration = BoxDecoration(
 );
 
 const kRaceCountPreference = 'RaceCount Preference';
-
 const kRaceDetailsPreference = 'RaceDetails Preference';
+
+const kCupWidthFactor = 0.55;
+const kCupRotationAngle = 0.1;
+const kCupAnimationDuration = 2300;
