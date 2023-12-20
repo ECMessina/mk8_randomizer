@@ -68,10 +68,14 @@ class _RacesSelectedState extends State<RacesSelected> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          return;
+        }
+
         showRestartPopup();
-        return false;
       },
       child: Scaffold(
         body: SafeArea(
