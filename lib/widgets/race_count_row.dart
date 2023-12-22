@@ -4,7 +4,7 @@ import 'package:mk8_randomizer/providers/race_count_provider.dart';
 import 'package:mk8_randomizer/widgets/race_count_button.dart';
 
 class RaceCountRow extends ConsumerWidget {
-  const RaceCountRow({Key? key}) : super(key: key);
+  const RaceCountRow({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

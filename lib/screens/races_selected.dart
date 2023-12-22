@@ -1,55 +1,84 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mk8_randomizer/constants.dart';
+import 'package:mk8_randomizer/providers/shared_preferences_provider.dart';
 import 'package:mk8_randomizer/screens/alert_popup.dart';
+import 'package:mk8_randomizer/screens/track_selection.dart';
 import 'package:mk8_randomizer/widgets/action_button.dart';
 import 'package:mk8_randomizer/widgets/race_count_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class RacesSelected extends StatefulWidget {
-  const RacesSelected({super.key, required this.finalRaceList});
+class RacesSelected extends ConsumerStatefulWidget {
+  const RacesSelected({super.key, this.finalRaceList});
 
-  final List<String> finalRaceList;
+  final List<String>? finalRaceList;
 
   @override
-  State<RacesSelected> createState() => _RacesSelectedState();
+  ConsumerState<RacesSelected> createState() => _RacesSelectedState();
 }
 
-class _RacesSelectedState extends State<RacesSelected> with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
+class _RacesSelectedState extends ConsumerState<RacesSelected> with SingleTickerProviderStateMixin {
+  late final AnimationController animationController;
+  late final SharedPreferences sharedPreferences;
+  late final List<String> finalRaceList;
+  late final PageController trackController;
 
   var finalRaceIndex = 0;
 
-  final trackController = PageController();
-
   @override
   void initState() {
-    _animationController = AnimationController(
+    animationController = AnimationController(
       duration: const Duration(milliseconds: kCupAnimationDuration),
       vsync: this,
     )..repeat(reverse: true);
+
+    sharedPreferences = ref.read(sharedPreferencesProvider);
+
+    if (widget.finalRaceList == null) {
+      finalRaceList = sharedPreferences.getStringList(kFinalRaceListSaved)!;
+      finalRaceIndex = sharedPreferences.getInt(kFinalRaceIndexSaved)!;
+
+      WidgetsBinding.instance.addPostFrameCallback((duration) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Color.fromARGB(255, 247, 187, 5),
+            content: Text(
+              "Data loaded from previous session",
+              style: TextStyle(color: Colors.black),
+            ),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      });
+    } else {
+      finalRaceList = widget.finalRaceList!;
+      sharedPreferences.setStringList(kFinalRaceListSaved, finalRaceList);
+      sharedPreferences.setInt(kFinalRaceIndexSaved, finalRaceIndex);
+    }
+
+    trackController = PageController(initialPage: finalRaceIndex);
 
     super.initState();
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
+    animationController.dispose();
     super.dispose();
   }
 
   void showRestartPopup() {
-    if (finalRaceIndex != widget.finalRaceList.length - 1) {
+    if (finalRaceIndex != finalRaceList.length - 1) {
       showDialog(
         context: context,
         builder: (BuildContext context) => AlertPopup(
           contentText: 'Waving a white flag already? This will start you over!',
+          buttonText1: 'Keep Racing',
           buttonOnPressed1: () {
             Navigator.pop(context);
           },
-          buttonText1: 'Keep Racing',
-          buttonOnPressed2: () {
-            Navigator.popUntil(context, (route) => route.isFirst);
-          },
           buttonText2: 'Reselect Races',
+          buttonOnPressed2: returnToTrackSelection,
         ),
       );
     } else {
@@ -57,13 +86,24 @@ class _RacesSelectedState extends State<RacesSelected> with SingleTickerProvider
         context: context,
         builder: (BuildContext context) => AlertPopup(
           contentText: 'You did it!',
-          buttonOnPressed1: () {
-            Navigator.popUntil(context, (route) => route.isFirst);
-          },
           buttonText1: 'Start new tour',
+          buttonOnPressed1: returnToTrackSelection,
         ),
       );
     }
+  }
+
+  void returnToTrackSelection() {
+    sharedPreferences.remove(kFinalRaceListSaved);
+    sharedPreferences.remove(kFinalRaceIndexSaved);
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const TrackSelection(),
+      ),
+      (route) => false,
+    );
   }
 
   @override
@@ -107,12 +147,12 @@ class _RacesSelectedState extends State<RacesSelected> with SingleTickerProvider
                       alignment: Alignment.center,
                       width: 150,
                       child: Text(
-                        'Race ${finalRaceIndex + 1} of ${widget.finalRaceList.length}',
+                        'Race ${finalRaceIndex + 1} of ${finalRaceList.length}',
                         style: const TextStyle(color: Colors.white, fontSize: 20),
                       ),
                     ),
                     Visibility(
-                      visible: finalRaceIndex < widget.finalRaceList.length - 1,
+                      visible: finalRaceIndex < finalRaceList.length - 1,
                       maintainState: true,
                       maintainAnimation: true,
                       maintainSize: true,
@@ -129,16 +169,18 @@ class _RacesSelectedState extends State<RacesSelected> with SingleTickerProvider
                 ),
                 Expanded(
                   child: PageView.builder(
-                    itemCount: widget.finalRaceList.length,
+                    itemCount: finalRaceList.length,
                     controller: trackController,
                     physics: const BouncingScrollPhysics(),
-                    onPageChanged: (int trackInFinal) {
+                    onPageChanged: (int trackInFinal) async {
+                      await sharedPreferences.setInt(kFinalRaceIndexSaved, trackInFinal);
+
                       setState(() {
                         finalRaceIndex = trackInFinal;
                       });
                     },
                     itemBuilder: (context, activeTrackIndex) {
-                      var splitFinalRaceImage = widget.finalRaceList[activeTrackIndex].split("-");
+                      var splitFinalRaceImage = finalRaceList[activeTrackIndex].split("-");
                       var activeCup = splitFinalRaceImage[0];
 
                       return FractionallySizedBox(
@@ -151,9 +193,9 @@ class _RacesSelectedState extends State<RacesSelected> with SingleTickerProvider
                               child: Transform.rotate(
                                 angle: kCupRotationAngle,
                                 child: AnimatedBuilder(
-                                  animation: _animationController,
+                                  animation: animationController,
                                   builder: (context, widget) => Transform.rotate(
-                                    angle: _animationController.value * kCupRotationAngle * -2,
+                                    angle: animationController.value * kCupRotationAngle * -2,
                                     child: Image.asset(
                                       "images/$activeCup.png",
                                       fit: BoxFit.fill,
@@ -163,7 +205,7 @@ class _RacesSelectedState extends State<RacesSelected> with SingleTickerProvider
                               ),
                             ),
                             const SizedBox(height: 15),
-                            Image.asset("images/${widget.finalRaceList[activeTrackIndex]}.png"),
+                            Image.asset("images/${finalRaceList[activeTrackIndex]}.png"),
                           ],
                         ),
                       );

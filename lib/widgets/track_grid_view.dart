@@ -5,18 +5,18 @@ import 'package:mk8_randomizer/constants.dart';
 import 'package:mk8_randomizer/providers/race_details_provider.dart';
 
 class TrackGridView extends ConsumerStatefulWidget {
-  const TrackGridView({Key? key}) : super(key: key);
+  const TrackGridView({super.key});
 
   @override
   ConsumerState<TrackGridView> createState() => _TrackGridViewState();
 }
 
 class _TrackGridViewState extends ConsumerState<TrackGridView> with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
+  late final AnimationController animationController;
 
   @override
   void initState() {
-    _animationController = AnimationController(
+    animationController = AnimationController(
       duration: const Duration(milliseconds: kCupAnimationDuration),
       vsync: this,
     )..repeat(reverse: true);
@@ -26,7 +26,7 @@ class _TrackGridViewState extends ConsumerState<TrackGridView> with SingleTicker
 
   @override
   void dispose() {
-    _animationController.dispose();
+    animationController.dispose();
     super.dispose();
   }
 
@@ -43,7 +43,7 @@ class _TrackGridViewState extends ConsumerState<TrackGridView> with SingleTicker
             children: [
               TrackSelectionImage(
                 imageNumber: "${index + 1}",
-                animationController: _animationController,
+                animationController: animationController,
               ),
               for (int x = 0; x < 4; x++)
                 TrackSelectionImage(

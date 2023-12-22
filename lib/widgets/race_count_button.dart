@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class RaceCountButton extends StatelessWidget {
   const RaceCountButton({
-    Key? key,
+    super.key,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   final Function() onPressed;
 
