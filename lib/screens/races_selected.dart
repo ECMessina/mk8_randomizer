@@ -6,6 +6,7 @@ import 'package:mk8_randomizer/screens/alert_popup.dart';
 import 'package:mk8_randomizer/screens/track_selection.dart';
 import 'package:mk8_randomizer/widgets/action_button.dart';
 import 'package:mk8_randomizer/widgets/race_count_button.dart';
+import 'package:mk8_randomizer/widgets/sideways_snackbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RacesSelected extends ConsumerStatefulWidget {
@@ -39,16 +40,7 @@ class _RacesSelectedState extends ConsumerState<RacesSelected> with SingleTicker
       finalRaceIndex = sharedPreferences.getInt(kFinalRaceIndexSaved)!;
 
       WidgetsBinding.instance.addPostFrameCallback((duration) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            backgroundColor: Color.fromARGB(255, 247, 187, 5),
-            content: Text(
-              "Data loaded from previous session",
-              style: TextStyle(color: Colors.black),
-            ),
-            duration: Duration(seconds: 2),
-          ),
-        );
+        SidewaysSnackBar.show(context, "Data loaded from previous session");
       });
     } else {
       finalRaceList = widget.finalRaceList!;
