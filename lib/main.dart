@@ -10,9 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-  ]);
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   final sharedPreferences = await SharedPreferences.getInstance();
 
@@ -34,9 +32,7 @@ void main() async {
       overrides: [
         sharedPreferencesProvider.overrideWithValue(sharedPreferences),
       ],
-      child: MainApp(
-        inProgressCup: inProgressCup,
-      ),
+      child: MainApp(inProgressCup: inProgressCup),
     ),
   );
 }
