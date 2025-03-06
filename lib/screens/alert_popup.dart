@@ -20,36 +20,24 @@ class AlertPopup extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(32.0),
-        ),
+        borderRadius: BorderRadius.all(Radius.circular(32.0)),
       ),
-      title: const Text(
-        'Whoa!',
-        textAlign: TextAlign.center,
-      ),
-      content: Text(
-        contentText,
-        textAlign: TextAlign.center,
-      ),
+      title: const Text('Whoa!', textAlign: TextAlign.center),
+      content: Text(contentText, textAlign: TextAlign.center),
       actions: [
         Row(
           children: [
             Expanded(
               child: TextButton(
                 onPressed: buttonOnPressed1,
-                child: Text(
-                  buttonText1,
-                ),
+                child: Text(buttonText1, textAlign: TextAlign.center),
               ),
             ),
             if (buttonText2 != null && buttonOnPressed2 != null)
               Expanded(
                 child: TextButton(
                   onPressed: buttonOnPressed2,
-                  child: Text(
-                    buttonText2!,
-                  ),
+                  child: Text(buttonText2!, textAlign: TextAlign.center),
                 ),
               ),
           ],

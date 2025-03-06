@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
 class ActionButton extends StatelessWidget {
-  const ActionButton({super.key, required this.icon, required this.text, required this.onPressed});
+  const ActionButton({
+    super.key,
+    required this.icon,
+    required this.text,
+    required this.onPressed,
+  });
 
   final IconData icon;
   final String text;
@@ -10,20 +15,13 @@ class ActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
-      icon: Icon(
-        icon,
-        size: 30,
-        color: Colors.red,
-      ),
+      icon: Icon(icon, size: 30, color: Colors.red),
       label: Text(
         text,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 20,
-        ),
+        style: const TextStyle(color: Colors.white, fontSize: 20),
       ),
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(
+        backgroundColor: WidgetStateProperty.all(
           const Color.fromARGB(255, 3, 9, 73),
         ),
       ),
