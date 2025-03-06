@@ -101,7 +101,10 @@ class TrackSelection extends ConsumerWidget {
                       shortRaceList.addAll(raceList);
                     } while (shortRaceList.length < raceCountSelected);
 
-                    // ignore: use_build_context_synchronously
+                    if (!context.mounted) {
+                      return;
+                    }
+
                     Navigator.push(
                       context,
                       MaterialPageRoute(

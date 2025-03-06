@@ -1,21 +1,27 @@
 import 'dart:convert';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mk8_randomizer/constants.dart';
+import 'package:mk8_randomizer/models.dart';
 import 'package:mk8_randomizer/providers/shared_preferences_provider.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final raceDetailsProvider = NotifierProvider<RaceDetailsNotifier, RaceDetails>(RaceDetailsNotifier.new);
+part 'race_details_provider.g.dart';
 
-class RaceDetailsNotifier extends Notifier<RaceDetails> {
+@riverpod
+class RaceDetails extends _$RaceDetails {
   @override
-  RaceDetails build() {
+  RaceDetailsModel build() {
     var sharedPreferences = ref.read(sharedPreferencesProvider);
-    var savedRaceDetailsJson = sharedPreferences.getString(kRaceDetailsPreference);
+    var savedRaceDetailsJson = sharedPreferences.getString(
+      kRaceDetailsPreference,
+    );
 
     if (savedRaceDetailsJson == null) {
-      return RaceDetails();
+      return RaceDetailsModel();
     }
 
-    var savedRaceDetails = RaceDetails.fromJson(jsonDecode(savedRaceDetailsJson));
+    var savedRaceDetails = RaceDetailsModel.fromJson(
+      jsonDecode(savedRaceDetailsJson),
+    );
     return savedRaceDetails;
   }
 
@@ -27,9 +33,7 @@ class RaceDetailsNotifier extends Notifier<RaceDetails> {
       state.cups[cupIndex].toggleSelection();
     }
 
-    state = RaceDetails.copy(
-      cups: state.cups,
-    );
+    state = RaceDetailsModel.copy(cups: state.cups);
 
     _saveToSharedPreferences();
   }
@@ -38,97 +42,5 @@ class RaceDetailsNotifier extends Notifier<RaceDetails> {
     var sharedPreferences = ref.read(sharedPreferencesProvider);
     var savedRaceDetails = jsonEncode(state);
     await sharedPreferences.setString(kRaceDetailsPreference, savedRaceDetails);
-  }
-}
-
-class RaceDetails {
-  RaceDetails() {
-    for (int x = 0; x < 24; x++) {
-      cups.add(Cup());
-    }
-  }
-
-  RaceDetails.copy({
-    required this.cups,
-  });
-
-  List<Cup> cups = [];
-
-  Map<String, dynamic> toJson() => {
-        'cups': cups.map((cup) => cup.toJson()).toList()
-      };
-
-  RaceDetails.fromJson(Map<String, dynamic> json) {
-    cups = json['cups'].map<Cup>((cup) => Cup.fromJson(cup)).toList();
-  }
-}
-
-class Cup {
-  Cup() {
-    for (int x = 0; x < 4; x++) {
-      tracks.add(Track());
-    }
-  }
-
-  bool selected = true;
-  List<Track> tracks = [];
-
-  void toggleSelection() {
-    selected = !selected;
-
-    for (int x = 0; x < tracks.length; x++) {
-      tracks[x].selected = selected;
-    }
-  }
-
-  void checkTracks() {
-    var selectedTracks = tracks.where((track) => track.selected).toList();
-    // Following code shows a few other ways to get selected tracks
-    // var selectedTracks2 = tracks.where((track) => track.selected == true).toList();
-    // var selectedTracks3 = tracks.where((track) {
-    //   return track.selected == true;
-    // }).toList();
-    // var selectedTracks4 = tracks.where((track) {
-    //   if (track.selected) {
-    //     return true;
-    //   }
-    //   else {
-    //     return false;
-    //   }
-    // }).toList();
-
-    if (selectedTracks.isEmpty) {
-      selected = false;
-    } else {
-      selected = true;
-    }
-  }
-
-  Map<String, dynamic> toJson() => {
-        'selected': selected,
-        'tracks': tracks.map((track) => track.toJson()).toList()
-      };
-
-  Cup.fromJson(Map<String, dynamic> json) {
-    selected = json['selected'];
-    tracks = json['tracks'].map<Track>((track) => Track.fromJson(track)).toList();
-  }
-}
-
-class Track {
-  bool selected = true;
-
-  Track();
-
-  void toggleSelection() {
-    selected = !selected;
-  }
-
-  Map<String, dynamic> toJson() => {
-        'selected': selected
-      };
-
-  Track.fromJson(Map<String, dynamic> json) {
-    selected = json['selected'];
   }
 }

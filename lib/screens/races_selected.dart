@@ -18,7 +18,8 @@ class RacesSelected extends ConsumerStatefulWidget {
   ConsumerState<RacesSelected> createState() => _RacesSelectedState();
 }
 
-class _RacesSelectedState extends ConsumerState<RacesSelected> with SingleTickerProviderStateMixin {
+class _RacesSelectedState extends ConsumerState<RacesSelected>
+    with SingleTickerProviderStateMixin {
   late final AnimationController animationController;
   late final SharedPreferences sharedPreferences;
   late final List<String> finalRaceList;
@@ -63,24 +64,27 @@ class _RacesSelectedState extends ConsumerState<RacesSelected> with SingleTicker
     if (finalRaceIndex != finalRaceList.length - 1) {
       showDialog(
         context: context,
-        builder: (BuildContext context) => AlertPopup(
-          contentText: 'Waving a white flag already? This will start you over!',
-          buttonText1: 'Keep Racing',
-          buttonOnPressed1: () {
-            Navigator.pop(context);
-          },
-          buttonText2: 'Reselect Races',
-          buttonOnPressed2: returnToTrackSelection,
-        ),
+        builder:
+            (BuildContext context) => AlertPopup(
+              contentText:
+                  'Waving a white flag already? This will start you over!',
+              buttonText1: 'Keep Racing',
+              buttonOnPressed1: () {
+                Navigator.pop(context);
+              },
+              buttonText2: 'Reselect Races',
+              buttonOnPressed2: returnToTrackSelection,
+            ),
       );
     } else {
       showDialog(
         context: context,
-        builder: (BuildContext context) => AlertPopup(
-          contentText: 'You did it!',
-          buttonText1: 'Start new tour',
-          buttonOnPressed1: returnToTrackSelection,
-        ),
+        builder:
+            (BuildContext context) => AlertPopup(
+              contentText: 'You did it!',
+              buttonText1: 'Start new tour',
+              buttonOnPressed1: returnToTrackSelection,
+            ),
       );
     }
   }
@@ -91,9 +95,7 @@ class _RacesSelectedState extends ConsumerState<RacesSelected> with SingleTicker
 
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(
-        builder: (context) => const TrackSelection(),
-      ),
+      MaterialPageRoute(builder: (context) => const TrackSelection()),
       (route) => false,
     );
   }
@@ -102,7 +104,7 @@ class _RacesSelectedState extends ConsumerState<RacesSelected> with SingleTicker
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) {
+      onPopInvokedWithResult: (bool didPop, Object? result) {
         if (didPop) {
           return;
         }
@@ -140,7 +142,10 @@ class _RacesSelectedState extends ConsumerState<RacesSelected> with SingleTicker
                       width: 150,
                       child: Text(
                         'Race ${finalRaceIndex + 1} of ${finalRaceList.length}',
-                        style: const TextStyle(color: Colors.white, fontSize: 20),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                        ),
                       ),
                     ),
                     Visibility(
@@ -165,14 +170,18 @@ class _RacesSelectedState extends ConsumerState<RacesSelected> with SingleTicker
                     controller: trackController,
                     physics: const BouncingScrollPhysics(),
                     onPageChanged: (int trackInFinal) async {
-                      await sharedPreferences.setInt(kFinalRaceIndexSaved, trackInFinal);
+                      await sharedPreferences.setInt(
+                        kFinalRaceIndexSaved,
+                        trackInFinal,
+                      );
 
                       setState(() {
                         finalRaceIndex = trackInFinal;
                       });
                     },
                     itemBuilder: (context, activeTrackIndex) {
-                      var splitFinalRaceImage = finalRaceList[activeTrackIndex].split("-");
+                      var splitFinalRaceImage = finalRaceList[activeTrackIndex]
+                          .split("-");
                       var activeCup = splitFinalRaceImage[0];
 
                       return FractionallySizedBox(
@@ -186,18 +195,24 @@ class _RacesSelectedState extends ConsumerState<RacesSelected> with SingleTicker
                                 angle: kCupRotationAngle,
                                 child: AnimatedBuilder(
                                   animation: animationController,
-                                  builder: (context, widget) => Transform.rotate(
-                                    angle: animationController.value * kCupRotationAngle * -2,
-                                    child: Image.asset(
-                                      "images/$activeCup.png",
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
+                                  builder:
+                                      (context, widget) => Transform.rotate(
+                                        angle:
+                                            animationController.value *
+                                            kCupRotationAngle *
+                                            -2,
+                                        child: Image.asset(
+                                          "images/$activeCup.png",
+                                          fit: BoxFit.fill,
+                                        ),
+                                      ),
                                 ),
                               ),
                             ),
                             const SizedBox(height: 15),
-                            Image.asset("images/${finalRaceList[activeTrackIndex]}.png"),
+                            Image.asset(
+                              "images/${finalRaceList[activeTrackIndex]}.png",
+                            ),
                           ],
                         ),
                       );
