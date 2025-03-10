@@ -6,6 +6,7 @@ import 'package:mk8_randomizer/providers/race_details_provider.dart';
 import 'package:mk8_randomizer/screens/alert_popup.dart';
 import 'package:mk8_randomizer/screens/races_selected.dart';
 import 'package:mk8_randomizer/widgets/action_button.dart';
+import 'package:mk8_randomizer/widgets/all_button.dart';
 import 'package:mk8_randomizer/widgets/race_count_row.dart';
 import 'package:mk8_randomizer/widgets/track_grid_view.dart';
 
@@ -22,7 +23,28 @@ class TrackSelection extends ConsumerWidget {
             decoration: kBackgroundDecoration,
             child: Column(
               children: [
-                const RaceCountRow(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    AllButton(
+                      icon: Icons.done_all,
+                      onPressed:
+                          () => ref
+                              .read(raceDetailsProvider.notifier)
+                              .selectAll(true),
+                      color: Color.fromARGB(255, 173, 216, 230),
+                    ),
+                    const RaceCountRow(),
+                    AllButton(
+                      icon: Icons.remove_done,
+                      onPressed:
+                          () => ref
+                              .read(raceDetailsProvider.notifier)
+                              .selectAll(false),
+                      color: Color.fromARGB(255, 255, 102, 51),
+                    ),
+                  ],
+                ),
                 const TrackGridView(),
                 ActionButton(
                   icon: Icons.flag,

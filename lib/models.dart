@@ -28,6 +28,14 @@ class CupModel {
   bool selected = true;
   List<TrackModel> tracks = [];
 
+  void updateAll(bool selectAll) {
+    selected = selectAll;
+
+    for (int x = 0; x < tracks.length; x++) {
+      tracks[x].selected = selectAll;
+    }
+  }
+
   void toggleSelection() {
     selected = !selected;
 
@@ -38,19 +46,6 @@ class CupModel {
 
   void checkTracks() {
     var selectedTracks = tracks.where((track) => track.selected).toList();
-    // Following code shows a few other ways to get selected tracks
-    // var selectedTracks2 = tracks.where((track) => track.selected == true).toList();
-    // var selectedTracks3 = tracks.where((track) {
-    //   return track.selected == true;
-    // }).toList();
-    // var selectedTracks4 = tracks.where((track) {
-    //   if (track.selected) {
-    //     return true;
-    //   }
-    //   else {
-    //     return false;
-    //   }
-    // }).toList();
 
     if (selectedTracks.isEmpty) {
       selected = false;

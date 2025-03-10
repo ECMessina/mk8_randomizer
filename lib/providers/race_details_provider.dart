@@ -43,4 +43,14 @@ class RaceDetails extends _$RaceDetails {
     var savedRaceDetails = jsonEncode(state);
     await sharedPreferences.setString(kRaceDetailsPreference, savedRaceDetails);
   }
+
+  void selectAll(bool allSelect) {
+    for (int x = 0; x < state.cups.length; x++) {
+      state.cups[x].updateAll(allSelect);
+    }
+
+    state = RaceDetailsModel.copy(cups: state.cups);
+
+    _saveToSharedPreferences();
+  }
 }
